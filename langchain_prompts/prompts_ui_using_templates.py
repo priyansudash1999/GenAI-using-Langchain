@@ -1,7 +1,7 @@
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import streamlit as st
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate, load_prompt
 
 load_dotenv()
 
@@ -16,22 +16,7 @@ style_input = st.selectbox("Select Explanation style", ["Begineer", "Technical",
 
 length_input = st.selectbox("Select Explanation Length", ["Short (1-2 paragraphs)", "Medium (3-4 Paragraphs)", "Long (Detailed Explanation)"])
 
-chat_template = PromptTemplate(
-  template = """
-                Please Summarize the research paper titled "{paper_input}" with the following specifications.
-                Explanation style: {style_input}
-                Explanation_length: {length_input}
-
-                1. Mathematical Details:
-                  - Include relevant mathematical equations if present in paper.
-                  - Explain the mathematical concpts using simple, intuitive code snippets where applicable
-                2. Annalogies:
-                  - Use relatable analogies to simplify complex ideas.
-                If certain informataion is not available in the paper, respond with Insufficient Information Available instead of guessing.
-                Ensure the summary is clear, accuarate and alligned with the provided style and length.
-             """,
-             input_variables = ["paper_input", "style_input", "length_input"]
-)
+chat_template = load_prompt('template.json')
 
 prompts = chat_template.invoke({
   'paper_input': paper_input,
